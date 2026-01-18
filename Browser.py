@@ -1,9 +1,8 @@
 import tkinter as tk
 
 from URL import URL
-from Util import lex
-
-WIDTH, HEIGHT = 800, 600
+from Util import lex, layout, WIDTH, HEIGHT, HSTEP, VSTEP
+from BrowerEvent import BrowerEvent
 
 class Browser:
     def __init__(self):
@@ -14,20 +13,21 @@ class Browser:
             height=HEIGHT,
         )
         self.canvas.pack()
+        self.scroll = 0
+        self.event_handler = BrowerEvent(self)
 
     def load(self, url):
         body = url.request()
         text = lex(body)
-
-        HSTEP, VSTEP = 13, 18
-        cursor_x, cursor_y = HSTEP, VSTEP
-        
-        for c in text:
-            self.canvas.create_text(cursor_x, cursor_y, text=c)
-            cursor_x += HSTEP
-            if cursor_x >= WIDTH - HSTEP:
-                cursor_y += VSTEP
-                cursor_x = HSTEP
+        self.display_list = layout(text)
+        self.draw()
+    
+    def draw(self):
+        self.canvas.delete("all")
+        for x, y, c in self.display_list:
+            if y > self.scroll + HEIGHT: continue
+            if y + VSTEP < self.scroll: continue
+            self.canvas.create_text(x, y - self.scroll, text=c)
 
 if __name__ == "__main__":
     import sys
