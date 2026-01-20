@@ -17,6 +17,7 @@ EXAMPLES = {
     '1': ('CH1/Url.py', 'http://example.org/'),
     '2': ('CH2/Browser.py', 'http://browser.engineering/examples/xiyouji.html'),
     '3': ('CH3/Browser.py', 'http://browser.engineering/text.html'),
+    '4': ('CH4/Browser.py', 'http://browser.engineering/'),
 }
 
 def main():
