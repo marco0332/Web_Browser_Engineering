@@ -15,6 +15,9 @@ BLOCK_ELEMENTS = [
     "figcaption", "main", "div", "table", "form", "fieldset",
     "legend", "details", "summary"
 ]
+HEAD_ELEMENTS = [
+    "meta", "link", "title"
+]
 
 class BlockLayout:
     def __init__(self, node, parent, previous):
@@ -35,6 +38,10 @@ class BlockLayout:
                 child.tag in BLOCK_ELEMENTS
                 for child in self.node.children]):
             return "block"
+        elif any([isinstance(child, Element) and \
+                child.tag in HEAD_ELEMENTS
+                for child in self.node.children]):
+            return "head"
         elif self.node.children:
             return "inline"
         else:
@@ -48,8 +55,9 @@ class BlockLayout:
             self.children.append(next)
             previous = next
     
-    def layout(self):    
-        self.x = self.parent.x
+    def layout(self):
+        mode = self.layout_mode()
+        self.x = self.parent.x 
         self.width = self.parent.width
         
         if self.previous:
@@ -57,7 +65,6 @@ class BlockLayout:
         else:
             self.y = self.parent.y
         
-        mode = self.layout_mode()
         if mode == "block":
             previous = None
             for child in self.node.children:
@@ -80,6 +87,9 @@ class BlockLayout:
 
         if mode == "block":
             self.height = sum([child.height for child in self.children])
+        # Practice 5-2
+        elif mode == "head":
+            self.height = 0
         else:
             self.height = self.cursor_y
     
