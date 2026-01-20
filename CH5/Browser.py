@@ -3,6 +3,7 @@ import tkinter as tk
 from Util import paint_tree
 from DocumentLayout import DocumentLayout, WIDTH, HEIGHT, HSTEP, VSTEP
 from HTMLParser import HTMLParser
+from ViewSourceHTMLParser import ViewSourceHTMLParser
 from URL import URL
 from BrowerEvent import BrowerEvent
 
@@ -20,7 +21,8 @@ class Browser:
 
     def load(self, url):
         body = url.request()
-        self.nodes = HTMLParser(body).parse()
+        parser = HTMLParser if not url.view_source else ViewSourceHTMLParser
+        self.nodes = parser(body).parse()
         self.document = DocumentLayout(self.nodes)
         self.document.layout()
         self.event_handler.add_document(self.document)

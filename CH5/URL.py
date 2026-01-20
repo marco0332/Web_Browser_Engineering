@@ -5,6 +5,9 @@ from Util import load
 
 class URL:
     def __init__(self, url):
+        # Practice 4-5
+        self.view_source = True if "view-source" in url else False
+        
         # 로컬 파일 경로인지 확인
         if "://" not in url:
             self.is_file = True
@@ -12,6 +15,8 @@ class URL:
         else:
             self.is_file = False
             self.scheme, url = url.split("://", 1)
+            if self.view_source:
+                _, self.scheme = self.scheme.split(":", 1)
             assert self.scheme == "http"
 
             if "/" not in url:
