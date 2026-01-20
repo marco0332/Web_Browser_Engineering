@@ -53,6 +53,14 @@ class HTMLParser:
             node = Element(tag, attributes, parent)
             parent.children.append(node)
         else:
+            # Pracice 4-2
+            if tag in ["p", "li"] and self.unfinished:
+                if self.unfinished[-1].tag == tag:
+                    node = self.unfinished.pop()
+                    parent = self.unfinished[-1] if self.unfinished else None
+                    if parent:
+                        parent.children.append(node)
+
             parent = self.unfinished[-1] if self.unfinished else None
             node = Element(tag, attributes, parent)
             self.unfinished.append(node)
