@@ -16,6 +16,7 @@ class HTMLParser:
     def __init__(self, body):
         self.body = body
         self.unfinished = []
+        self.in_script = False
     
     def get_attributes(self, text):
         parts = text.split()
@@ -44,6 +45,8 @@ class HTMLParser:
         self.implicit_tags(tag)
         
         if tag.startswith("/"):
+            if tag == "/script":
+                self.in_script = False
             if len(self.unfinished) == 1: return
             node = self.unfinished.pop()
             parent = self.unfinished[-1]
@@ -53,7 +56,10 @@ class HTMLParser:
             node = Element(tag, attributes, parent)
             parent.children.append(node)
         else:
-            # Pracice 4-2
+            # Practice 4-3
+            if tag == "script":
+                self.in_script = True
+            # Practice 4-2
             if tag in ["p", "li"] and self.unfinished:
                 if self.unfinished[-1].tag == tag:
                     node = self.unfinished.pop()
@@ -77,7 +83,31 @@ class HTMLParser:
     def parse(self):
         text = ""
         in_tag = False
-        for c in self.body:
+        for i, c in enumerate(self.body):
+            # <script> 내부에서는 </script> 태그 특별 처리
+            if self.in_script and not in_tag:
+                if c == "<":
+                    remaining = self.body[i:]
+                    if remaining.lower().startswith("</script"):
+                        # 다음 문자가 허용된 문자인지 확인
+                        if len(remaining) > len("</script"):
+                            next_char = remaining[len("</script")]
+                            if next_char in [' ', '\t', '\v', '\r', '/', '>']:
+                                # </script> 태그로 처리
+                                if text:
+                                    self.add_text(text)
+                                    text = ""
+                                # > 까지 찾기
+                                tag_end = remaining.find('>', len("</script"))
+                                if tag_end != -1:
+                                    tag_content = remaining[1:tag_end]
+                                    self.add_tag(tag_content)
+                                    continue
+                    text += c
+                else:
+                    text += c
+                continue
+
             if c == "<":
                 in_tag = True
                 if text: self.add_text(text)
