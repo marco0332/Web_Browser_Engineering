@@ -14,8 +14,9 @@ import subprocess
 
 # 자주 사용하는 예제 URL
 EXAMPLES = {
-    '1': ('url', 'http://example.org/'),
-    '2': ('browser', 'http://browser.engineering/examples/xiyouji.html'),
+    '1': ('CH1/Url.py', 'http://example.org/'),
+    '2': ('CH2/Browser.py', 'http://browser.engineering/examples/xiyouji.html'),
+    '3': ('CH3/Browser.py', 'http://browser.engineering/text.html'),
 }
 
 def main():
@@ -30,8 +31,7 @@ def main():
     
     # 예제 번호로 실행
     if command in EXAMPLES:
-        script_type, url = EXAMPLES[command]
-        script_file = 'URL.py' if script_type == 'url' else 'Browser.py'
+        script_file, url = EXAMPLES[command]
         subprocess.run([sys.executable, script_file, url])
         return
     
