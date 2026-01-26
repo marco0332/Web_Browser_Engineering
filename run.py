@@ -19,7 +19,8 @@ EXAMPLES = {
     '3': ('CH3/Browser.py', 'http://browser.engineering/text.html'),
     '4': ('CH4/Browser.py', 'http://browser.engineering/'),
     '5': ('CH5/Browser.py', 'http://browser.engineering/'),
-    'test': ('CH5/Browser.py', 'test1.html')
+    '6': ('CH6/Browser.py', 'http://browser.engineering/'),
+    'test': ('CH6/Browser.py', 'test1.html')
 }
 
 def main():
